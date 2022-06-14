@@ -1,0 +1,110 @@
+---
+- hosts: all
+  vars:
+    sr_name: ""
+    vm_template: "ubuntu-22.04-base"
+    vm_name: ""
+    bridge_name: ""
+    mac: ""
+    memory: ""
+    vm_created: false
+    vcpu_count: 2
+    iso_name: ""
+
+  tasks:
+  - name: Get UUID of share SR
+    command: xe sr-list name-label="{{ sr_name }}" --minimal
+    register: sruuid
+
+  - name: debug output
+    debug: 
+     msg: "{{ sruuid}}.stdout"
+
+  - name: Get the UUID of the VM template
+    command: xe template-list name-label="{{ vm_template }}" --minimal
+    register: templateuuid
+
+  - name: debug output
+    debug: 
+     msg: "{{ templateuuid}}.stdout"
+
+  - name: Get the UUID of the network
+    command: xe network-list bridge="{{ bridge_name }}" --minimal
+    register: networkuuid
+
+  - name: Check if VM exists
+    command: xe vm-list name-label="{{ vm_name }}"
+    register: vmuuid_existing
+
+  - name: "Set variables"
+    set_fact:
+      vm_created: true
+    when: vmuuid_existing.stdout != ""
+
+  - name: Deploy new VM
+    command: xe vm-install template={{ templateuuid.stdout }} new-name-label="{{ vm_name }}" sr-uuid={{ sruuid.stdout }}
+    register: vmuuid
+    when: vm_created == false
+
+  - name: Set memory
+    command: xe vm-memory-limits-set uuid={{ vmuuid.stdout }} dynamic-min="{{ memory }}" dynamic-max="{{ memory }}" static-max="{{ memory }}" static-min="{{ memory }}"
+
+  - name: Set vcpu count max
+    command: xe vm-param-set VCPUs-max={{ vcpu_count }} uuid={{ vmuuid.stdout }}
+    when: vm_created == false
+
+  - name: Set vcpu count at startup
+    command: xe vm-param-set VCPUs-at-startup={{ vcpu_count }} uuid={{ vmuuid.stdout }}
+    when: vm_created == false
+
+  - name: Get the UUID of the attached network
+    command: xe vm-vif-list name-label="{{ vm_name }}" --minimal
+    register: vif_uuid
+    when: vm_created == false
+
+  - name: "Set variables"
+    set_fact:
+      mac: random
+    when:  mac == ""
+
+  - debug:
+      var: mac
+
+  - name: Delete existing VIF 
+    command: xe vif-destroy vm-uuid={{ vmuuid.stdout }} uuid={{ vif_uuid.stdout }}  device=0
+    when: vm_created == false and vif_uuid != false
+
+  - name: Attach VM to {{ network_name }}
+    command: xe vif-create vm-uuid={{ vmuuid.stdout }} network-uuid={{ networkuuid.stdout }} mac={{ mac }} device=0
+    when: vm_created == false
+
+  - name: Get the UUID of the disk
+    command: xe vm-disk-list vbd-params=device=xvda uuid={{ vmuuid.stdout }} --minimal
+    register: vdiuuid
+    when: vm_created == false
+
+  - name: Create and attach CDROM drive
+    command: xe vm-cd-add vm={{ vm_name }} cd-name={{ iso_name }} device=3
+    when: vm_created == false
+
+  - name: Boot VM and start preseed installation
+    command: xe vm-start uuid={{ vmuuid.stdout }}
+
+  - name: Get the boot time for the VM
+    command: xe vm-param-get param-name=start-time  uuid={{ vmuuid.stdout}}
+    register: boottime
+
+  - name: Get VM IP for Ansible
+    command: |
+      xe vm-list name-label="{{ vm_name }}" params=networks --minimal
+    retries: 30
+    delay: 5
+    register: vm_ip_raw
+    until: vm_ip_raw.stdout.find("ip:") != -1
+
+  - name: Parse VM IP
+    set_fact:
+      vm_ip: "{{ vm_ip_raw | regex_search('ip: ([0-9]+.[0-9]+.[0-9]+.[0-9]+)', '\\1') }}"
+
+  - debug:
+      var: vm_ip
