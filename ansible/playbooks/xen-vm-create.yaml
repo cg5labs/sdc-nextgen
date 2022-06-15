@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: local
   vars:
     sr_name: ""
     vm_template: "ubuntu-22.04-base"
@@ -108,3 +108,35 @@
 
   - debug:
       var: vm_ip
+
+  - name: Add host to runtime inventory
+    add_host:
+      name="{{ item }}"
+      groups="deployed_vms"
+    with_items: "{{ vm_ip }}"
+
+- hosts: deployed_vms
+  vars:
+    ansible_user: vagrant
+    ansible_ssh_private_key_file: /Users/user/.ssh/id_rsa.scheiblc
+
+  tasks:
+  - name: Mount xentools CD
+    command: mount /dev/sr0 /mnt
+    become: true
+
+  - name: Run the xentools installer
+    command: /mnt/Linux/install.sh -n
+    become: true
+
+  - name: Unmount the xentools CD
+    command: umount /mnt
+    become: true
+
+
+- name: Eject xentools CD
+  hosts: local
+
+  tasks:
+    - name: Eject the xentools CD
+      command: xe vm-cd-eject vm={{ vmuuid.stdout }}
