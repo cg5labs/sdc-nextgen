@@ -74,7 +74,7 @@
     command: xe vif-destroy vm-uuid={{ vmuuid.stdout }} uuid={{ vif_uuid.stdout }}  device=0
     when: vm_created == false and vif_uuid != false
 
-  - name: Attach VM to {{ network_name }}
+  - name: Attach VM to network
     command: xe vif-create vm-uuid={{ vmuuid.stdout }} network-uuid={{ networkuuid.stdout }} mac={{ mac }} device=0
     when: vm_created == false
 
@@ -119,7 +119,12 @@
   vars:
     ansible_user: vagrant
 
-  tasks:
+  pre_tasks:
+
+  - name: set hostname
+    command: "hostnamectl set-hostname {{ vm_name }}"
+    become: true
+
   - name: Mount xentools CD
     command: mount /dev/sr0 /mnt
     become: true
@@ -132,10 +137,42 @@
     command: umount /mnt
     become: true
 
+  - name: Reboot VM 
+    reboot:
+      reboot_timeout: 3600 
+    become: true
 
-- name: Eject xentools CD
+- name: Post-reboot activities
   hosts: local
 
   tasks:
     - name: Eject the xentools CD
       command: xe vm-cd-eject vm={{ vmuuid.stdout }}
+
+    - name: Get VM IP for Ansible
+      command: |
+        xe vm-list name-label="{{ vm_name }}" params=networks --minimal
+      retries: 30
+      delay: 5
+      register: vm_ip_raw
+      until: vm_ip_raw.stdout.find("ip:") != -1
+
+    - name: Parse VM IP
+      set_fact:
+        vm_ip: "{{ vm_ip_raw | regex_search('ip: ([0-9]+.[0-9]+.[0-9]+.[0-9]+)', '\\1') }}"
+
+    - name: Add host to runtime inventory
+      add_host:
+        name="{{ item }}"
+        groups="deployed_vms"
+      with_items: "{{ vm_ip }}"
+
+- name: Install K8s master
+  hosts: deployed_vms
+  vars:
+    ansible_user: vagrant
+
+  roles:
+    - roles/k8s-master
+
+
