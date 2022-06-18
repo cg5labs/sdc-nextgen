@@ -1,4 +1,5 @@
 #cloud-config
+---
 autoinstall:
   version: 1
   identity:
@@ -18,6 +19,8 @@ autoinstall:
     - apt-transport-https
     - ca-certificates
     - curl
+    - net-tools
+    - containerd
   apt:
     disable_components: []
     geoip: true

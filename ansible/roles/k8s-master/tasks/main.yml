@@ -50,9 +50,9 @@
   sysctl:
     name: "{{ item.key }}"
     value: "{{ item.value }}"
-    sysctl_set: yes
+    sysctl_set: true
     state: present
-    reload: yes
+    reload: true
   with_dict: "{{ sysctl_conf }}"
   become: true
 
@@ -63,17 +63,17 @@
   become: true
 
 - name: get k8s repo gpg key
-  get_url: 
+  get_url:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     dest: "/usr/share/keyrings/kubernetes-archive-keyring.gpg"
   become: true
 
 - name: add k8s apt repository
-  apt_repository: 
+  apt_repository:
     repo: 'deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
-    state: present 
+    state: present
     filename: kubernetes.list
-    update_cache: yes
+    update_cache: true
   become: true
 
 # Install packages
@@ -102,8 +102,8 @@
     dest: "/root/.kube/config"
     remote_src: true
   become: true
-  #retries: 3
-  #delay: 5
+  # retries: 3
+  # delay: 5
 
 - name: setup Flannel Network
   command: "kubectl apply -f {{ flannel_network_url }}"
@@ -112,7 +112,7 @@
   until: flanell_result.rc == 0
   retries: 10
   delay: 1
-  #ignore_errors: yes
+  # ignore_errors: yes
 
 - name: setup Flannel Network RBAC
   command: "kubectl apply -f {{ flannel_rbac_url }}"
