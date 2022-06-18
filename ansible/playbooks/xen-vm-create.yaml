@@ -18,7 +18,7 @@
 
     - name: debug output
       debug:
-        msg: "{{ sruuid}}.stdout"
+        msg: "{{ sruuid }}.stdout"
 
     - name: Get the UUID of the VM template
       command: xe template-list name-label="{{ vm_template }}" --minimal
@@ -26,7 +26,7 @@
 
     - name: debug output
       debug:
-        msg: "{{ templateuuid}}.stdout"
+        msg: "{{ templateuuid }}.stdout"
 
     - name: Get the UUID of the network
       command: xe network-list bridge="{{ bridge_name }}" --minimal
@@ -91,7 +91,7 @@
       command: xe vm-start uuid={{ vmuuid.stdout }}
 
     - name: Get the boot time for the VM
-      command: xe vm-param-get param-name=start-time  uuid={{ vmuuid.stdout}}
+      command: xe vm-param-get param-name=start-time  uuid={{ vmuuid.stdout }}
       register: boottime
 
     - name: Get VM IP for Ansible
@@ -173,4 +173,5 @@
     ansible_user: vagrant
 
   roles:
-    - roles/k8s-master
+    - {role: roles/k8s-master, when: "vm_ansible_role == 'k8s-master'"}
+    - {roles/k8s-worker, when: "vm_ansible_role == 'k8s-worker'"}
