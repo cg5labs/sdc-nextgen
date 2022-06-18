@@ -5,6 +5,12 @@
 *.tfstate
 *.tfstate.*
 
+# packer builds
+builds/*
+
+# packer cache
+packer/ubuntu-22.04/packer_cache/*
+
 # Crash log files
 crash.log
 

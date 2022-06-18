@@ -1,0 +1,37 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: vagrant
+    username: vagrant
+    # Generated via: printf vagrant | mkpasswd -m sha-512 -S vagrant. -s
+    password: "$6$vagrant.$sd6r0/OKL.FIGZbhanVkrLassSxoPRv1h5lkISsmBONqaLUGVXkEcD22Ddak5W8JSxeU0VFkU/We1Y7o4hVO/1"
+  early-commands:
+    # otherwise packer tries to connect and exceed max attempts:
+    - systemctl stop ssh
+  ssh:
+    authorized-keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkT2vlhjeRaD0deN9X0/2DCatfiR/aLqjm+oayzYP2ipvXMkoQd+tlBh4vs2GtJI0pX0LY9cvaSS/zftoAAjGOgr79xLuY8hVIOFyFLnS+HaS6HVhVUZ95ZZrwhzlgmbqhBYe4zZ6/dJ63VFdPh5SO8epj68JK8p4/6w4NOnK4mAVAhftLJj98HAQRChDTEImpYp4IhjAjq16AS97tDw/vcp/WiNhXrV6zP05QLwJK8QbYfmTQnHN5dsJKB0svsALm4mdBF76mIig5HfVfAb7AFyD9MsNzQEwbtk5dUlQsiB4qkvr3v/QOKrssarifGfLKoJBV1XZHUqUDhT+aYrI7 cgscheible@yahoo.com"
+    install-server: true
+    allow-pw: true
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+  apt:
+    disable_components: []
+    geoip: true
+    preserve_sources_list: false
+    primary:
+      - arches: [amd64, i386]
+        uri: http://sg.archive.ubuntu.com/ubuntu
+      - arches: [default]
+        uri: http://ports.ubuntu.com/ubuntu-ports
+  drivers:
+    install: false
+  updates: security
+  timezone: "Asia/Singapore"
+  late-commands:
+    - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
+    - wget http://archive.ubuntu.com/ubuntu/pool/main/x/xe-guest-utilities/xe-guest-utilities_7.10.0-0ubuntu2_amd64.deb -O /target/tmp/xe-guest-utilities_7.10.0-0ubuntu2_amd64.deb
+    - dpkg --root=/target -i /target/tmp/xe-guest-utilities_7.10.0-0ubuntu2_amd64.deb
