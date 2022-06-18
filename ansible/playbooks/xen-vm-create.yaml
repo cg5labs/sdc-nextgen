@@ -174,4 +174,4 @@
 
   roles:
     - {role: roles/k8s-master, when: "vm_ansible_role == 'k8s-master'"}
-    - {roles/k8s-worker, when: "vm_ansible_role == 'k8s-worker'"}
+    - {role: roles/k8s-worker, when: "vm_ansible_role == 'k8s-worker'"}
