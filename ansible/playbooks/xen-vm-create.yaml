@@ -167,10 +167,26 @@
         groups="deployed_vms"
       with_items: "{{ vm_ip }}"
 
+    - name: Add host to runtime inventory k8s-master group
+      add_host:
+        name="{{ item }}"
+        groups="k8s-master_vms"
+      with_items: "{{ vm_ip }}"
+      when: k8s_master
+
+    - name: Add host to runtime inventory k8s-worker group
+      add_host:
+        name="{{ item }}"
+        groups="k8s-worker_vms"
+      with_items: "{{ vm_ip }}"
+      when: k8s_worker
+
 - name: Install K8s master
   hosts: deployed_vms
   vars:
     ansible_user: vagrant
 
   roles:
-    - {role: roles/k8s-master, when: "vm_ansible_role == 'k8s-master'"}
+    - role: roles/k8s-common
+    - {role: roles/k8s-master, when: k8s_master}
+      #- {role: roles/k8s-worker, when: "vm_ansible_role == 'k8s-worker'"}

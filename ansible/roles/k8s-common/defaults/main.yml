@@ -1,0 +1,22 @@
+# roles/k8s-common/defaults/main.yml
+---
+base_pkgs:
+  - containerd
+  - apt-transport-https
+  - ca-certificates
+  - curl
+
+k8s_pkgs:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+sysctl_conf:
+  net.ipv4.ip_forward: 1
+  net.bridge.bridge-nf-call-iptables: 1
+  net.ipv4.conf.all.arp_notify: 1
+
+flannel_pod_cidr: "10.244.0.0/16"
+
+flannel_network_url: "https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+flannel_rbac_url: "https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-rbac.yml"

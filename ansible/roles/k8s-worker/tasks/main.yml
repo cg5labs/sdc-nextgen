@@ -1,0 +1,6 @@
+# roles/k8s-worker/tasks/main.yml
+---
+- name: Get token to join cluster
+  command: "echo \"getting token...\" "
+  become: true
+
