@@ -181,7 +181,7 @@
       with_items: "{{ vm_ip }}"
       when: k8s_worker
 
-- name: Install K8s master
+- name: Install K8s master and common k8s packages
   hosts: deployed_vms
   vars:
     ansible_user: vagrant
@@ -189,4 +189,41 @@
   roles:
     - role: roles/k8s-common
     - {role: roles/k8s-master, when: k8s_master}
-    - {role: roles/k8s-worker, when: k8s_worker}
+
+- name: Query kubeadm join cmd string
+  hosts: k8s-master_vms
+  vars:
+    ansible_user: vagrant
+
+  tasks:
+    - name: Get token to join cluster
+      command: "kubeadm token create --print-join-command"
+      become: true
+      register: kubeadm_token_raw
+
+    - debug:
+        msg: "{{ kubeadm_token_raw.stdout }}"
+
+
+    - name: set join command
+      set_fact:
+        kubeadm_token: "{{ kubeadm_token_raw.stdout_lines[0] }}"
+
+    # https://serverfault.com/questions/962040/sharing-ansible-variable-between-plays
+    - name: add variables to dummy host
+      add_host:
+        name: "variable_holder"
+        kubeadm_token: "{{ kubeadm_token }}"
+
+- name: kubeadm join master
+  hosts: k8s-worker_vms
+  vars:
+    ansible_user: vagrant
+    kubeadm_token: "{{ hostvars['variable_holder']['kubeadm_token'] }}"
+
+  tasks:
+    - name: Use token to join cluster
+      command: "{{ kubeadm_token }}"
+      become: true
+      register: kubeadm_join
+      when: k8s_worker
