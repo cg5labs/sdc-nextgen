@@ -4,7 +4,6 @@ vm_template: "ubuntu-22.04-base"
 vm_name: "xsrv005"
 k8s_master: true
 k8s_worker: false
-#vm_ansible_role: "k8s-master"
 bridge_name: "xenbr0"
 mac: "1e:8f:c0:11:13:6e"
 memory: 4294967296
