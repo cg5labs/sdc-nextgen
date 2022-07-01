@@ -1,8 +1,9 @@
 [local]
 xen-0 ansible_ssh_port=22 ansible_user=root
 
+# Playbook will query k8s-master to get kubeadm token for workers to join
 [k8s-master_vms]
 xsrv005 ansible_ssh_port=22 ansible_user=vagrant
 
+# empty because k8s-workers are dynamically added during playbook run
 [k8s-worker_vms]
-xsrv006 ansible_ssh_port=22 ansible_user=vagrant

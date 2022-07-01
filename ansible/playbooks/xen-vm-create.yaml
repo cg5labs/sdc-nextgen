@@ -204,7 +204,6 @@
     - debug:
         msg: "{{ kubeadm_token_raw.stdout }}"
 
-
     - name: set join command
       set_fact:
         kubeadm_token: "{{ kubeadm_token_raw.stdout_lines[0] }}"

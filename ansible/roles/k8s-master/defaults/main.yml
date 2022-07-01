@@ -1,5 +1,8 @@
 # roles/k8s-master/defaults/main.yml
 ---
+
+operator_user: vagrant
+
 base_pkgs:
   - containerd
   - apt-transport-https

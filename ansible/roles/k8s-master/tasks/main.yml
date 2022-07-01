@@ -4,20 +4,39 @@
   command: "kubeadm init --pod-network-cidr={{ flannel_pod_cidr }}"
   become: true
 
-- name: Create filepath for kubeconfig
+- name: Create filepath for root kubeconfig 
   file:
-    path: /root/.kube
+    path: "/root/.kube"
     state: directory
     mode: '0750'
     owner: root
   become: true
 
-- name: setup kubeconfig
+- name: Create filepath for operator kubeconfig 
+  file:
+    path: "/home/{{ operator_user }}/.kube"
+    state: directory
+    mode: '0750'
+    owner: "{{ operator_user }}"
+  become: true
+
+- name: setup root kubeconfig
   copy:
     src: "/etc/kubernetes/admin.conf"
     dest: "/root/.kube/config"
     remote_src: true
+    owner: "{{ operator_user }}"
   become: true
+
+- name: setup operator kubeconfig
+  copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/home/{{ operator_user }}/.kube/config"
+    remote_src: true
+    owner: "{{ operator_user }}"
+  become: true
+  with_items:
+    - "{{ operator_user }}"
 
 - name: setup Flannel Network
   command: "kubectl apply -f {{ flannel_network_url }}"
