@@ -1,0 +1,11 @@
+# roles/k8s-common/defaults/main.yml
+---
+base_pkgs:
+  - net-tools
+
+data_disk: xvdb
+data_partition_number: 1
+
+# set to false/true on play
+vm_erase_data: false
+

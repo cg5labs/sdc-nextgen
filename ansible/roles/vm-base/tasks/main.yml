@@ -1,0 +1,43 @@
+# roles/k8s-common/tasks/main.yml
+---
+- name: Ensure required OS base pacakges are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ base_pkgs }}"
+  become: true
+
+# Create a new primary partition
+- name: Create partition on data disk
+  parted:
+    device: /dev/{{ data_disk }}
+    number: "{{ data_partition_number }}"
+    state: present
+  when: ( vm_data != false ) and ( vm_erase_data == true )
+  become: true
+
+- name: Create filesystem on data disk partition
+  filesystem:
+     fstype: ext4
+     dev: /dev/{{ data_disk }}{{ data_partition_number }}
+  when: ( vm_data != false ) and ( vm_erase_data == true )
+  become: true
+
+- name: Create filepath /data
+  file:
+    path: /data
+    state: directory
+    mode: '0755'
+    owner: root
+  when: ( vm_erase_data == true )
+  become: true
+
+- name: Mount data disk partition on /data
+  mount:
+    fstype: ext4
+    src: /dev/{{ data_disk }}{{ data_partition_number }}
+    path: /data
+    state: mounted
+  when: ( vm_data != false )
+  become: true
+

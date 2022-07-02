@@ -2,6 +2,9 @@
 sr_name: "Local storage"
 vm_template: "ubuntu-22.04-base"
 vm_name: "xsrv006"
+vm_class: "k8s"
+vm_data: false
+vm_erase_data: false
 k8s_master: false
 k8s_worker: true
 bridge_name: "xenbr0"

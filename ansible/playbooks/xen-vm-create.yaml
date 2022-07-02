@@ -1,9 +1,16 @@
 ---
+# playbooks/xen-vm-create.yaml
+# Create Xen VMs from existing templates
+# Customize bootstrap with playbook includes for "k8s", "nfs" (WIP), ...
+
 - hosts: local
   vars:
     sr_name: ""
     vm_template: "ubuntu-22.04-base"
     vm_name: ""
+    vm_class: ""
+    #vm_data: ""
+    #vm_erase_data: ""
     bridge_name: ""
     mac: ""
     memory: ""
@@ -18,7 +25,7 @@
 
     - name: debug output
       debug:
-        msg: "{{ sruuid }}.stdout"
+        msg: "SR UUID {{ sruuid }}.stdout"
 
     - name: Get the UUID of the VM template
       command: xe template-list name-label="{{ vm_template }}" --minimal
@@ -78,10 +85,37 @@
       command: xe vif-create vm-uuid={{ vmuuid.stdout }} network-uuid={{ networkuuid.stdout }} mac={{ mac }} device=0
       when: vm_created == false
 
-    - name: Get the UUID of the disk
+    - name: Get the UUID of the system disk
       command: xe vm-disk-list vbd-params=device=xvda uuid={{ vmuuid.stdout }} --minimal
       register: vdiuuid
       when: vm_created == false
+
+    - name: Check if persistent data disk already exists
+      command: xe vdi-list name-label={{ vm_name }}-data --minimal
+      register: vdi_data_uuid
+      when: ( vm_data != false ) and ( vm_created == false )
+
+    - debug:
+        var: vdi_data_uuid
+      when: ( vm_data != false ) and ( vm_created == false )
+
+    - debug:
+        msg: VDI UUID {{ vdi_data_uuid.stdout }} VM UUID {{ vmuuid.stdout }}
+      when: ( vm_data == true) and ( vm_created == false )
+
+    - name: Create persistent data disk
+      command: xe vdi-create sr-uuid={{ sruuid.stdout }} name-label={{ vm_name }}-data virtual-size={{ vm_data }}GiB 
+      when: (vm_data != false ) and ( vm_created == false ) and ( not vdi_data_uuid.stdout )
+
+    - name: Get new persistent data disk vdi-uuid
+      command: xe vdi-list name-label={{ vm_name }}-data --minimal
+      register: vdi_data_uuid
+      when: (vm_data != false ) and ( vm_created == false ) and ( vdi_data_uuid.stdout != "" )
+
+    - name: Register persistent data disk with VM
+      command: "xe vbd-create vm-uuid={{ vmuuid.stdout }} vdi-uuid={{ vdi_data_uuid.stdout }} device=1 bootable=false mode=RW type=Disk"
+      register: vbduuid
+      when: ( vm_data != false ) and ( vm_created == false )
 
     - name: Create and attach CDROM drive
       command: xe vm-cd-add vm={{ vm_name }} cd-name={{ iso_name }} device=3
@@ -89,6 +123,10 @@
 
     - name: Boot VM and start preseed installation
       command: xe vm-start uuid={{ vmuuid.stdout }}
+
+    #- name: Attach persistent data disk to VM
+    #  command: xe vbd-plug uuid={{ vbduuid.stdout }} 
+    #  when: vm_data and ( vm_created == false )
 
     - name: Get the boot time for the VM
       command: xe vm-param-get param-name=start-time  uuid={{ vmuuid.stdout }}
@@ -181,48 +219,9 @@
       with_items: "{{ vm_ip }}"
       when: k8s_worker
 
-- name: Install K8s master and common k8s packages
-  hosts: deployed_vms
-  vars:
-    ansible_user: vagrant
+- name: Apply VM Base Role to all deployed_vms
+  import_playbook: vm-base.yaml
 
-  roles:
-    - role: roles/k8s-common
-    - {role: roles/k8s-master, when: k8s_master}
-
-- name: Query kubeadm join cmd string
-  hosts: k8s-master_vms
-  vars:
-    ansible_user: vagrant
-
-  tasks:
-    - name: Get token to join cluster
-      command: "kubeadm token create --print-join-command"
-      become: true
-      register: kubeadm_token_raw
-
-    - debug:
-        msg: "{{ kubeadm_token_raw.stdout }}"
-
-    - name: set join command
-      set_fact:
-        kubeadm_token: "{{ kubeadm_token_raw.stdout_lines[0] }}"
-
-    # https://serverfault.com/questions/962040/sharing-ansible-variable-between-plays
-    - name: add variables to dummy host
-      add_host:
-        name: "variable_holder"
-        kubeadm_token: "{{ kubeadm_token }}"
-
-- name: kubeadm join master
-  hosts: k8s-worker_vms
-  vars:
-    ansible_user: vagrant
-    kubeadm_token: "{{ hostvars['variable_holder']['kubeadm_token'] }}"
-
-  tasks:
-    - name: Use token to join cluster
-      command: "{{ kubeadm_token }}"
-      become: true
-      register: kubeadm_join
-      when: k8s_worker
+- name: Play for k8s-hosts only
+  import_playbook: k8s.yaml
+  when: (vm_class == "k8s" )

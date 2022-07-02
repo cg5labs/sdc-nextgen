@@ -1,0 +1,12 @@
+---
+# playbooks/vm-base.yaml
+# Base VM configs and persistent data management
+
+- name: Run VM-Base Ansible role on deployed_vms
+  hosts: deployed_vms
+  vars:
+    ansible_user: vagrant
+
+  roles:
+    - role: roles/vm-base
+
