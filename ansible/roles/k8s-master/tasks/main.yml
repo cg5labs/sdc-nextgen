@@ -67,3 +67,15 @@
 - name: Apply Flannel RBAC config
   command: "kubectl apply -f /root/kube-flannel-rbac.yml"
   become: true
+
+- find: paths="/root" recurse=yes patterns="*.yml"
+  register: root_files_to_delete
+  become: true
+
+- name: Cleanup yaml files
+  file:
+    path: "{{ item }}"
+    state: absent
+  become: true
+  with_items:
+    - "{{ root_files_to_delete.files }}"
