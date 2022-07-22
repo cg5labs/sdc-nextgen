@@ -38,14 +38,32 @@
   with_items:
     - "{{ operator_user }}"
 
-- name: setup Flannel Network
-  command: "kubectl apply -f {{ flannel_network_url }}"
+- name: Create Flannel Network config from template
+  template:
+    src: kube-flannel.yml.j2
+    dest: /root/kube-flannel.yml
+    owner: root
+    group: root
+    mode: '0600'
+  become: true
+
+- name: Apply Flannel Network config
+  command: "kubectl apply -f /root/kube-flannel.yml"
   become: true
   register: flanell_result
   until: flanell_result.rc == 0
   retries: 10
   delay: 1
 
-- name: setup Flannel Network RBAC
-  command: "kubectl apply -f {{ flannel_rbac_url }}"
+- name: Create Flannel RBAC config from template
+  template:
+    src: kube-flannel-rbac.yml.j2
+    dest: /root/kube-flannel-rbac.yml
+    owner: root
+    group: root
+    mode: '0600'
+  become: true
+
+- name: Apply Flannel RBAC config
+  command: "kubectl apply -f /root/kube-flannel-rbac.yml"
   become: true
