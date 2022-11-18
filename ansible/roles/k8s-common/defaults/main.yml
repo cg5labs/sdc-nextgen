@@ -16,6 +16,8 @@ sysctl_conf:
   net.bridge.bridge-nf-call-iptables: 1
   net.ipv4.conf.all.arp_notify: 1
 
+dns_server_ip: "192.168.1.1"
+
 flannel_pod_cidr: "10.244.0.0/16"
 
 flannel_network_url: "https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"

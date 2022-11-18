@@ -13,3 +13,4 @@ memory: 4294967296
 vm_created: false
 vcpu_count: 2
 iso_name: "guest-tools.iso"
+dns_server_ip: "192.168.17.1"

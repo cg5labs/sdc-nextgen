@@ -14,3 +14,4 @@ vm_created: false
 vcpu_count: 2
 iso_name: "guest-tools.iso"
 operator_user: "vagrant"
+dns_server_ip: "192.168.17.1"
