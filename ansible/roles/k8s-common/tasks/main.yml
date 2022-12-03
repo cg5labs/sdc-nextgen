@@ -54,19 +54,13 @@
   with_dict: "{{ sysctl_conf }}"
   become: true
 
-- name: Create systemd-resolvd config from template
+- name: Create custom static /etc/resolvd-k8s.conf from template
   template:
     src: resolved.conf.j2
-    dest: /etc/systemd/resolved.conf
+    dest: "{{ resolved_file_kubelet }}"
     owner: root
     group: root
     mode: '0644'
-  become: true
-
-- name: Restart service systemd-resolved, in all cases
-  service:
-    name: systemd-resolved
-    state: restarted
   become: true
 
 - name: Restart service containerd, in all cases
@@ -96,3 +90,26 @@
   with_items: "{{ k8s_pkgs }}"
   become: true
 
+- name: Patch kubelet systemd config to use custom settings
+  template:
+    src: kubelet.service.d/10-kubeadm.conf
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    owner: root
+    group: root
+    mode: '640'
+  become: true
+
+- name: Patch kubelet config.yaml to use custom settings
+  template:
+    src: kubelet/config.yaml
+    dest: "{{ kubelet_config_args }}"
+    owner: root
+    group: root
+    mode: '640'
+  become: true
+
+- name: Restart service kubelet, in all cases
+  service:
+    name: kubelet
+    state: restarted
+  become: true

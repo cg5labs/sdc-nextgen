@@ -16,6 +16,8 @@ sysctl_conf:
   net.bridge.bridge-nf-call-iptables: 1
   net.ipv4.conf.all.arp_notify: 1
 
+kubelet_config_args: "/var/lib/kubelet/custom-config.yaml"
+resolved_file_kubelet: "/etc/resolved-k8s.conf"
 dns_server_ip: "192.168.1.1"
 
 flannel_pod_cidr: "10.244.0.0/16"
