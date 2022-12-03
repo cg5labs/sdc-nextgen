@@ -1,0 +1,17 @@
+---
+sr_name: "EVO-870"
+vm_template: "ubuntu-22.04-base"
+vm_name: "xsrv009"
+vm_class: "nfs"
+vm_data: 200
+vm_erase_data: true
+k8s_master: false
+k8s_worker: false
+bridge_name: "xenbr0"
+mac: "1e:8f:c0:11:12:7e"
+memory: 2147483648
+vm_created: false
+vcpu_count: 2
+iso_name: "guest-tools.iso"
+operator_user: "vagrant"
+dns_server_ip: "192.168.17.1"

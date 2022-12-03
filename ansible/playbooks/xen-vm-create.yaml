@@ -110,12 +110,12 @@
     - name: Get new persistent data disk vdi-uuid
       command: xe vdi-list name-label={{ vm_name }}-data --minimal
       register: vdi_data_uuid
-      when: (vm_data != false ) and ( vm_created == false ) and ( vdi_data_uuid.stdout != "" )
+      when: (vm_data != false ) and ( vm_created == false )
 
     - name: Register persistent data disk with VM
       command: "xe vbd-create vm-uuid={{ vmuuid.stdout }} vdi-uuid={{ vdi_data_uuid.stdout }} device=1 bootable=false mode=RW type=Disk"
       register: vbduuid
-      when: ( vm_data != false ) and ( vm_created == false )
+      when: ( vm_data != false ) and ( vm_created == false ) and ( vdi_data_uuid.stdout != "" )
 
     - name: Create and attach CDROM drive
       command: xe vm-cd-add vm={{ vm_name }} cd-name={{ iso_name }} device=3
