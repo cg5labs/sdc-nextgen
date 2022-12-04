@@ -1,0 +1,10 @@
+# roles/nfs/defaults/main.yml
+---
+nfs_server_pkgs:
+  - nfs-common
+  - nfs-kernel-server
+
+exportfs_path: /data
+exportfs_subnet: "192.168.17.0/24"
+exportfs_opts: "(rw,sync,no_subtree_check,no_root_squash)"
+

@@ -2,6 +2,7 @@
 ---
 base_pkgs:
   - net-tools
+  - nfs-common
 
 data_disk: xvdb
 data_partition_number: 1

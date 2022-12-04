@@ -1,0 +1,23 @@
+# roles/nfs/tasks/main.yml
+---
+- name: Ensure required OS base pacakges are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ nfs_server_pkgs }}"
+  become: true
+
+- name: Create /etc/exports from template
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Reload /etc/exports
+  command: "exportfs -ra"
+  become: true
+
+

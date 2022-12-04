@@ -1,0 +1,11 @@
+
+# playbooks/nfs.yaml
+# Manage NFS fileservers
+
+- name: Configure nfs fileserver 
+  hosts: nfs
+  vars:
+    ansible_user: vagrant
+
+  roles:
+    - {role: roles/nfs, when: nfs_server}
