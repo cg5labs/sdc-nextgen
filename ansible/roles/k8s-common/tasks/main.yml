@@ -28,7 +28,7 @@
 
 - name: Create filepath for containerd data
   file:
-    path: /data/var/lib
+    path: /data/var/lib/containerd
     state: directory
     mode: '0750'
     owner: root
