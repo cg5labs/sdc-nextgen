@@ -1,16 +1,15 @@
 ---
 sr_name: "Local storage"
 vm_template: "ubuntu-22.04-base"
-vm_name: "xsrv006"
-vm_class: "k8s"
+vm_name: "xsrv010"
 vm_data: 20
 vm_erase_data: true
+vm_class: "nfs"
 k8s_master: false
-k8s_worker: true
+k8s_worker: false
 bridge_name: "xenbr0"
-mac: "1e:8f:c0:11:13:7e"
-memory: 4294967296
+mac: "1e:8f:c0:11:11:7f"
+memory: 2147483648
 vm_created: false
 vcpu_count: 2
 iso_name: "guest-tools.iso"
-dns_server_ip: "192.168.17.1"

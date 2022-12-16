@@ -11,3 +11,5 @@ xsrv005 ansible_ssh_port=22 ansible_user=vagrant
 
 [nfs]
 xsrv009 ansible_ssh_port=22 ansible_user=vagrant
+
+[deployed_vms]

@@ -1,10 +1,9 @@
 # roles/k8s-common/tasks/main.yml
 ---
-- name: Ensure K8s required OS base pacakges are installed
+- name: Force-remove containerd if it is already installed
   package:
-    name: "{{ item }}"
-    state: present
-  with_items: "{{ base_pkgs }}"
+    name: "containerd"
+    state: absent
   become: true
 
 - name: Create filepath for containerd config
@@ -13,6 +12,44 @@
     state: directory
     mode: '0750'
     owner: root
+  become: true
+
+- name: Check if /data path exists
+  stat:
+    path: "/data"
+  register: data_path
+
+- name: Remove existing /var/lib/containerd
+  file:
+    path: /var/lib/containerd
+    state: absent
+  become: true
+  when: data_path and data_path.stat.isdir
+
+- name: Create filepath for containerd data
+  file:
+    path: /data/var/lib
+    state: directory
+    mode: '0750'
+    owner: root
+  become: true
+  when: data_path and data_path.stat.isdir
+
+- name: Symlink /var/lib/containerd to /data/var/lib/containerd
+  file:
+    src: /data/var/lib/containerd
+    dest: /var/lib/containerd
+    owner: root
+    group: root
+    state: link
+  become: true
+  when: data_path and data_path.stat.isdir
+
+- name: Ensure K8s required OS base pacakges are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ base_pkgs }}"
   become: true
 
 - name: Generate containerd static config
