@@ -1,6 +1,8 @@
 
 # playbooks/k8s.yaml
 # Manage Kubernetes cluster setup with kubeadm
+#
+#
 
 - name: Install K8s master and common k8s packages
   hosts: deployed_vms
@@ -10,6 +12,14 @@
   roles:
     - role: roles/k8s-common
     - {role: roles/k8s-master, when: k8s_master}
+
+- name: "DEBUG groups"
+  debug:
+    msg: "{{ groups }}"
+
+- name: "DEBUG group names"
+  debug:
+    msg: "{{ group_names }}"
 
 - name: Query kubeadm join cmd string
   hosts: k8s-master_vms
