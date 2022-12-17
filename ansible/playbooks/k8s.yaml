@@ -13,20 +13,21 @@
     - role: roles/k8s-common
     - {role: roles/k8s-master, when: k8s_master}
 
-- name: "DEBUG groups"
-  debug:
-    msg: "{{ groups }}"
-
-- name: "DEBUG group names"
-  debug:
-    msg: "{{ group_names }}"
-
 - name: Query kubeadm join cmd string
   hosts: k8s-master_vms
   vars:
     ansible_user: vagrant
 
   tasks:
+
+    - name: "DEBUG groups"
+      debug:
+        msg: "{{ groups }}"
+
+    - name: "DEBUG group names"
+      debug:
+        msg: "{{ group_names }}"
+
     - name: Get token to join cluster
       command: "kubeadm token create --print-join-command"
       become: true
