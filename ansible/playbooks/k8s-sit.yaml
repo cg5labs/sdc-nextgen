@@ -48,14 +48,14 @@
         kubeadm_token: "{{ kubeadm_token_raw.stdout_lines[0] }}"
 
     - name: write join command to local
-      local_action: shell echo "{{ kubeadm_token }} "> token.txt
+      local_action: shell echo "{{ kubeadm_token }} "> ../token.txt
 
 
 - name: kubeadm join master
   hosts: k8s-worker_vms
   vars:
     ansible_user: vagrant
-    kubeadm_token: "{{ lookup('file', 'token.txt') }}"
+    kubeadm_token: "{{ lookup('file', '../token.txt') }}"
 
   tasks:
     - name: Use token to join cluster
