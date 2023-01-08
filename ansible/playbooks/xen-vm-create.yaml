@@ -176,9 +176,9 @@
 - hosts: deployed_vms
   vars:
     ansible_user: vagrant
+
+    # https://serverfault.com/questions/615132/accessing-hostvars-for-a-host-group-in-ansible
     vm_name: "{{ groups['local'] | map('extract', hostvars, ['vm_name']) | string  }}"
-    #vm_name: "{{ hostvars[item]['ansible_hostname'] }}"
-    #vm_name: "{{ hostvars['localhost']['vm_name'] }}"
 
   pre_tasks:
 
