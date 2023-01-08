@@ -57,6 +57,7 @@
       delegate_to: localhost
 
     - set_fact:
+        # https://serverfault.com/questions/1033936/extracting-part-of-the-string-using-ansible-regex-search-and-save-the-output-as
         mac: "{{ mac_gen_content.stdout | regex_search('mac_address: (.+)', '\\1') | first }}"
       when: mac == ""
 
