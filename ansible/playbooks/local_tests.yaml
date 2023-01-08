@@ -1,0 +1,27 @@
+#!/usr/bin/env ansible-playbook
+
+# playbook for local Ansible task testing
+
+- hosts: localhost
+
+  tasks:
+  - name: Genreate MAC address
+    command: scripts/random_mac.sh
+    register: mac_gen_content
+    when: mac = ""
+    delegate_to: localhost
+
+  - set_fact:
+      mac: "{{ mac_gen_content.stdout | regex_search('mac_address: (.+)', '\\1') | first }}"
+    when: mac = ""
+
+  - name: Genreate hostname
+    command: scripts/random_host.sh
+    register: vm_host_gen_content
+    when: vm_host = ""
+    delegate_to: localhost
+
+  - set_fact:
+      vm_host: "{{ vm_host_gen_content.stdout | regex_search('random_host: (.+)', '\\1') | first }}"
+    when: vm_host = ""
+

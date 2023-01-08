@@ -17,6 +17,8 @@
     vm_created: false
     vcpu_count: 2
     iso_name: ""
+    #mac_gen_content: false
+    #vm_host_gen_content: false
 
   tasks:
     - name: Get UUID of share SR
@@ -43,10 +45,30 @@
       command: xe vm-list name-label="{{ vm_name }}"
       register: vmuuid_existing
 
-    - name: "Set variables"
+    - name: "Set variables: vm_created"
       set_fact:
         vm_created: true
       when: vmuuid_existing.stdout != ""
+
+    - name: Genreate MAC address
+      command: scripts/random_mac.sh
+      register: mac_gen_content
+      when: mac == ""
+      delegate_to: localhost
+
+    - set_fact:
+        mac: "{{ mac_gen_content.stdout | regex_search('mac_address: (.+)', '\\1') | first }}"
+      when: mac == ""
+
+    - name: Genreate hostname
+      command: scripts/random_host.sh
+      register: vm_host_gen_content
+      when: vm_name == ""
+      delegate_to: localhost
+
+    - set_fact:
+        vm_name: "{{ vm_host_gen_content.stdout | regex_search('random_host: (.+)', '\\1') | first }}"
+      when: vm_name == ""
 
     - name: Deploy new VM
       command: xe vm-install template={{ templateuuid.stdout }} new-name-label="{{ vm_name }}" sr-uuid={{ sruuid.stdout }}
@@ -69,13 +91,11 @@
       register: vif_uuid
       when: vm_created == false
 
-    - name: "Set variables"
-      set_fact:
-        mac: random
-      when: mac == ""
-
     - debug:
         var: mac
+          
+    - debug:
+        var: vm_name
 
     - name: Delete existing VIF
       command: xe vif-destroy vm-uuid={{ vmuuid.stdout }} uuid={{ vif_uuid.stdout }}  device=0
@@ -156,8 +176,14 @@
 - hosts: deployed_vms
   vars:
     ansible_user: vagrant
+    vm_name: "{{ groups['local'] | map('extract', hostvars, ['vm_name']) | string  }}"
+    #vm_name: "{{ hostvars[item]['ansible_hostname'] }}"
+    #vm_name: "{{ hostvars['localhost']['vm_name'] }}"
 
   pre_tasks:
+
+    - debug:
+        msg: "{{ vm_name }}"
 
     - name: set hostname
       command: "hostnamectl set-hostname {{ vm_name }}"

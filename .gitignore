@@ -33,3 +33,7 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# Python VirtualEnvs
+venv
+__pycache__

@@ -1,0 +1,16 @@
+# K8s worker (large, 4 vCPU, 4GB RAM, 40GB disk)
+---
+sr_name: "Local storage"
+vm_template: "ubuntu-22.04-base"
+#vm_name: ""
+vm_data: 40
+vm_erase_data: true
+vm_class: "k8s"
+k8s_master: false
+k8s_worker: true
+bridge_name: "xenbr0"
+#mac: ""
+memory: 4294967296
+vm_created: false
+vcpu_count: 4
+iso_name: "guest-tools.iso"
