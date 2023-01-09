@@ -37,3 +37,6 @@ override.tf.json
 # Python VirtualEnvs
 venv
 __pycache__
+
+# misc
+wrkfile.*
