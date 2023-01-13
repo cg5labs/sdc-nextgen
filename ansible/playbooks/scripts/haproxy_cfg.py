@@ -19,14 +19,14 @@ output_file = open(output_filename, 'w')
 
 # haproxy backends data structure
 
-# hap_be = { serverName: hostname,
+# hap_be[hostname] = { serverName: hostname,
 #            serverIP: internal-IP,
 #            nodePort: nodePort }
 
-hap_be = {}
-
 # read input file line, split into array elements
 # store array elements in hap_be dict structure
+
+hap_be = {}
 
 for config_line in data_file:
 
