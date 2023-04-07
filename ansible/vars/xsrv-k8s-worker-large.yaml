@@ -14,3 +14,4 @@ memory: 4294967296
 vm_created: false
 vcpu_count: 4
 iso_name: "guest-tools.iso"
+nexus_apt_proxy: true

@@ -9,4 +9,4 @@ data_partition_number: 1
 
 # set to false/true on play
 vm_erase_data: false
-
+nexus_apt_proxy: false
