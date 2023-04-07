@@ -7,6 +7,7 @@
   hosts: deployed_vms
   vars:
     ansible_user: vagrant
+    vm_data: false
 
   roles:
     - role: roles/vm-base
