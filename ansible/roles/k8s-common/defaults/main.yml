@@ -7,9 +7,9 @@ base_pkgs:
   - curl
 
 k8s_pkgs:
-  - "kubectl=1.25.8-00"
-  - "kubelet=1.25.8-00"
-  - "kubeadm=1.25.8-00"
+  - "kubectl=1.26.3-00"
+  - "kubelet=1.26.3-00"
+  - "kubeadm=1.26.3-00"
 
 sysctl_conf:
   net.ipv4.ip_forward: 1
