@@ -127,6 +127,15 @@
   with_items: "{{ k8s_pkgs }}"
   become: true
 
+- name: Create filepath for kubelet config
+  file:
+    path: /var/lib/kubelet
+    state: directory
+    mode: '0750'
+    owner: root
+  become: true
+
+
 - name: Patch kubelet systemd config to use custom settings
   template:
     src: kubelet.service.d/10-kubeadm.conf
