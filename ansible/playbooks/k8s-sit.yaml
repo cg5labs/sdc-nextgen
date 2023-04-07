@@ -9,6 +9,7 @@
     ansible_user: vagrant
 
   roles:
+    - role: roles/vm-base
     - role: roles/k8s-common
 
 
