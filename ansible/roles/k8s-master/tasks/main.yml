@@ -1,8 +1,13 @@
 # roles/k8s-master/tasks/main.yml
 ---
 - name: kubeadm init
-  command: "kubeadm init --pod-network-cidr={{ flannel_pod_cidr }} --control-plane-endpoint={{ kube_api_endpoint}}"
+  command: "kubeadm init --pod-network-cidr={{ flannel_pod_cidr }} --control-plane-endpoint={{ kube_api_endpoint }}"
   become: true
+  register: kubeadm_init
+
+- name: Print var
+  debug:
+    msg: "{{ kubeadm_init.stdout }}"
 
 - name: Create filepath for root kubeconfig 
   file:
@@ -16,7 +21,7 @@
   file:
     path: "/home/{{ operator_user }}/.kube"
     state: directory
-    mode: '0750'
+    mode: '0700'
     owner: "{{ operator_user }}"
   become: true
 
@@ -25,6 +30,7 @@
     src: "/etc/kubernetes/admin.conf"
     dest: "/root/.kube/config"
     remote_src: true
+    mode: '0600'
     owner: "{{ operator_user }}"
   become: true
 
@@ -33,6 +39,7 @@
     src: "/etc/kubernetes/admin.conf"
     dest: "/home/{{ operator_user }}/.kube/config"
     remote_src: true
+    mode: '0600'
     owner: "{{ operator_user }}"
   become: true
   with_items:
