@@ -252,3 +252,8 @@
 - name: Play for k8s-hosts only
   import_playbook: k8s.yaml
   when: (vm_class == "k8s" )
+
+- name: Play for nfs-server only
+  import_playbook: nfs.yaml
+  when: (vm_class == "nfs" )
+
