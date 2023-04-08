@@ -15,11 +15,12 @@
   file:
     path: /etc/apt/sources.list
     state: absent
+  when: ( nexus_apt_proxy == true )
   become: true
 
 - name: Add Nexus Proxy apt-ubuntu-jammy
   apt_repository:
-    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy/ jammy main restricted
+    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy/ jammy main restricted universe
     validate_certs: false
     update_cache: false
     state: present
@@ -28,7 +29,7 @@
 
 - name: Add Nexus Proxy apt-ubuntu-jammy-updates
   apt_repository:
-    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy-updates jammy-updates main restricted
+    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy-updates jammy-updates main restricted universe
     validate_certs: false
     update_cache: false
     state: present
@@ -37,7 +38,7 @@
 
 - name: Add Nexus Proxy apt-ubuntu-jammy-security
   apt_repository:
-    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy-security jammy-security main restricted
+    repo: deb https://nexus.cg5labs.ddns.net/repository/apt-ubuntu-jammy-security jammy-security main restricted universe
     validate_certs: false
     update_cache: false
     state: present
