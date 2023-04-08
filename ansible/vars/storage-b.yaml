@@ -1,7 +1,7 @@
 ---
 sr_name: "EVO-870"
 vm_template: "ubuntu-22.04-base"
-vm_name: "xsrv010"
+vm_name: "storage-b"
 vm_class: "nfs"
 vm_data: 200
 vm_erase_data: true
@@ -16,3 +16,4 @@ vcpu_count: 2
 iso_name: "guest-tools.iso"
 operator_user: "vagrant"
 dns_server_ip: "192.168.17.1"
+nexus_apt_proxy: true
