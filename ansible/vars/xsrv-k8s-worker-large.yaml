@@ -1,7 +1,7 @@
 # K8s worker (large, 4 vCPU, 4GB RAM, 40GB disk)
 ---
-sr_name: "Local storage"
-vm_template: "ubuntu-22.04-base"
+sr_name: "EVO-870"
+vm_template: "ubuntu-22.04.3-base"
 #vm_name: ""
 vm_data: 40
 vm_erase_data: true
@@ -14,3 +14,4 @@ memory: 4294967296
 vm_created: false
 vcpu_count: 4
 iso_name: "guest-tools.iso"
+nexus_apt_proxy: true

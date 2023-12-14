@@ -1,5 +1,50 @@
 # roles/k8s-common/tasks/main.yml
 ---
+
+- name: Ignore self-sign cert on nexus apt-proxy
+  template:
+    src: 10-nexus.j2
+    dest: /etc/apt/apt.conf.d/10-nexus
+    owner: root
+    group: root
+    mode: '0640'
+  when: ( nexus_apt_proxy == true )
+  become: true
+
+- name: Remove default /etc/apt/sources.list
+  file:
+    path: /etc/apt/sources.list
+    state: absent
+  when: ( nexus_apt_proxy == true )
+  become: true
+
+- name: Add Nexus Proxy apt-ubuntu-jammy
+  apt_repository:
+    repo: deb https://nexus.cg5labs.net/repository/apt-ubuntu-jammy/ jammy main restricted universe
+    validate_certs: false
+    update_cache: false
+    state: present
+  when: ( nexus_apt_proxy == true )
+  become: true
+
+- name: Add Nexus Proxy apt-ubuntu-jammy-updates
+  apt_repository:
+    repo: deb https://nexus.cg5labs.net/repository/apt-ubuntu-jammy-updates jammy-updates main restricted universe
+    validate_certs: false
+    update_cache: false
+    state: present
+  when: ( nexus_apt_proxy == true )
+  become: true
+
+- name: Add Nexus Proxy apt-ubuntu-jammy-security
+  apt_repository:
+    repo: deb https://nexus.cg5labs.net/repository/apt-ubuntu-jammy-security jammy-security main restricted universe
+    validate_certs: false
+    update_cache: false
+    state: present
+  when: ( nexus_apt_proxy == true )
+  become: true
+
 - name: Update apt-get repo and cache
   apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
   become: true

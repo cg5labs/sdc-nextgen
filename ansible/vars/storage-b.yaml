@@ -1,18 +1,19 @@
-# K8s worker (small, 2 vCPU, 2GB RAM, 20GB disk)
 ---
 sr_name: "EVO-870"
-vm_template: "ubuntu-22.04.3-base"
-#vm_name: ""
-vm_data: 20
+vm_template: "ubuntu-22.04-base"
+vm_name: "storage-b"
+vm_class: "nfs"
+vm_data: 200
 vm_erase_data: true
-vm_class: "k8s"
 k8s_master: false
-k8s_worker: true
+k8s_worker: false
+nfs_server: true
 bridge_name: "xenbr0"
-#mac: ""
+mac: "1e:8f:c0:11:11:7f"
 memory: 2147483648
 vm_created: false
 vcpu_count: 2
 iso_name: "guest-tools.iso"
-nexus_apt_proxy: true
+operator_user: "vagrant"
 dns_server_ip: "192.168.17.1"
+nexus_apt_proxy: true

@@ -108,7 +108,7 @@
 
 - name: get k8s repo gpg key
   get_url:
-    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    url: "https://dl.k8s.io/apt/doc/apt-key.gpg"
     dest: "/usr/share/keyrings/kubernetes-archive-keyring.gpg"
   become: true
 

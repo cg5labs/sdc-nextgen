@@ -1,0 +1,58 @@
+---
+# playbooks/k8s-infra.yaml
+# Core infra deployment on new K8s cluster
+
+- name: Run K8s-Infra play on K8s-master
+  hosts: k8s-master_vms
+  vars:
+    ansible_user: vagrant
+
+  tasks:
+
+  - name: Ensure python3-pip package is installed.
+    package:
+      name: "python3-pip"
+      state: present
+    become: true    
+
+  - name: Install kubernetes python3 package
+    ansible.builtin.pip:
+      name: kubernetes
+
+
+  # From repository
+  - name: Add stable chart repo
+    kubernetes.core.helm_repository:
+      name: stable
+      repo_url: "https://kubernetes.github.io/ingress-nginx"
+
+  - name: Deploy latest version of Ingress-Nginx chart inside ingress-nginx namespace (and create it)
+    kubernetes.core.helm:
+      name: ingress-nginx
+      chart_ref: stable/ingress-nginx
+      release_namespace: ingress-nginx
+      create_namespace: true
+
+  #- name: Create infra k8s namespace
+  #  kubernetes.core.k8s:
+  #    name: infra
+  #    api_version: v1
+  #    kind: Namespace
+  #    state: present
+
+  #- name: Create argocd k8s namespace
+  #  kubernetes.core.k8s:
+  #    name: argocd
+  #    api_version: v1
+  #    kind: Namespace
+  #    state: present
+  - name: Create ArgoCD NS
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('file', 'files/argocd/ns.yaml') | from_yaml_all }}" 
+
+  - name: Deploy ArgoCD
+    kubernetes.core.k8s:
+      state: present
+      namespace: "argocd"
+      definition: "{{ lookup('file', 'files/argocd/install.yaml') | from_yaml_all }}"

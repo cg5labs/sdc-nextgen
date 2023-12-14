@@ -1,0 +1,20 @@
+# K8s master (small, 2 vCPU, 2GB RAM, 20GB disk)
+---
+sr_name: "Local storage"
+vm_template: "ubuntu-22.04-base"
+vm_name: "control-b"
+vm_data: false
+vm_erase_data: true
+vm_class: "k8s"
+k8s_master: true
+k8s_worker: false
+bridge_name: "xenbr0"
+mac: "1e:8f:c0:11:10:1f"
+memory: 2147483648
+vm_created: false
+vcpu_count: 2
+iso_name: "guest-tools.iso"
+kube_api_endpoint: control-b
+nexus_apt_proxy: true
+flannel_pod_cidr: "10.244.0.0/16"
+dns_server_ip: "192.168.17.1"
