@@ -2,19 +2,19 @@
 localhost ansible_connection=local
 
 [local]
-#xen-0 ansible_ssh_port=22 ansible_user=root
-xen-1 ansible_ssh_port=22 ansible_user=root
+xen-0 ansible_ssh_port=22 ansible_user=root
+#xen-1 ansible_ssh_port=22 ansible_user=root
 
 # Playbook will query k8s-master to get kubeadm token for workers to join
 [k8s-master_vms]
-#xsrv005 ansible_ssh_port=22 ansible_user=vagrant
-control-b ansible_ssh_port=22 ansible_user=vagrant
+xsrv005 ansible_ssh_port=22 ansible_user=vagrant
+#control-b ansible_ssh_port=22 ansible_user=vagrant
 
 # empty because k8s-workers are dynamically added during playbook run
 [k8s-worker_vms]
 
 [nfs]
-#xsrv009 ansible_ssh_port=22 ansible_user=vagrant
-storage-b ansible_ssh_port=22 ansible_user=vagrant
+xsrv009 ansible_ssh_port=22 ansible_user=vagrant
+#storage-b ansible_ssh_port=22 ansible_user=vagrant
 
 [deployed_vms]

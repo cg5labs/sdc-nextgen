@@ -6,7 +6,7 @@
 - hosts: local
   vars:
     sr_name: ""
-    vm_template: "ubuntu-22.04-base"
+    vm_template: "ubuntu-22.04.3-base"
     vm_name: ""
     vm_class: ""
     #vm_data: ""
