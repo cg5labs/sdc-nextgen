@@ -107,14 +107,14 @@
   become: true
 
 - name: get k8s repo gpg key
-  get_url:
-    url: "https://dl.k8s.io/apt/doc/apt-key.gpg"
-    dest: "/usr/share/keyrings/kubernetes-archive-keyring.gpg"
+  apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
+    state: present
   become: true
 
 - name: add k8s apt repository
   apt_repository:
-    repo: 'deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
+    repo: "deb https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/ /"
     state: present
     filename: kubernetes.list
     update_cache: true
@@ -135,6 +135,11 @@
     owner: root
   become: true
 
+- name: Create /etc/systemd/system/kubelet.service.d
+  file:
+    path: /etc/systemd/system/kubelet.service.d
+    state: directory
+  become: true
 
 - name: Patch kubelet systemd config to use custom settings
   template:
