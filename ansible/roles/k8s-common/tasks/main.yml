@@ -108,7 +108,7 @@
 
 - name: get k8s repo gpg key
   apt_key:
-    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
+    url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
     state: present
   become: true
 
@@ -125,6 +125,14 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ k8s_pkgs }}"
+  become: true
+
+- name: Create filepath for kubelet config
+  file:
+    path: /var/lib/kubelet
+    state: directory
+    mode: '0750'
+    owner: root
   become: true
 
 - name: Create /etc/systemd/system/kubelet.service.d
@@ -154,5 +162,5 @@
 - name: Restart service kubelet, in all cases
   service:
     name: kubelet
-    state: restarted
+    state: stopped
   become: true
