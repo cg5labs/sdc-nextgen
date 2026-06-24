@@ -1,10 +1,10 @@
-# roles/nfs/tasks/main.yml
+# roles/xoa/tasks/main.yml
 ---
-- name: Ensure required OS base pacakges are installed
+- name: Ensure required OS base packages are installed
   package:
     name: "{{ item }}"
     state: present
-  with_items: "{{ nfs_server_pkgs }}"
+  with_items: "{{ xoa_server_pkgs }}"
   become: true
 
 

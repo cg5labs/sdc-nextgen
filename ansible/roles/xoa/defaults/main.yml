@@ -1,10 +1,13 @@
-# roles/nfs/defaults/main.yml
+# roles/xoa/defaults/main.yml
 ---
-nfs_server_pkgs:
+xoa_server_pkgs:
+  - build-essential
+  - libpng-dev
+  - redis-server
+  - libvhdi-utils
   - nfs-common
-  - nfs-kernel-server
+  - lvm2
+  - cifs-utils
 
 exportfs_path: /data
-exportfs_subnet: "192.168.17.0/24"
-exportfs_opts: "(rw,sync,no_subtree_check,no_root_squash)"
 
