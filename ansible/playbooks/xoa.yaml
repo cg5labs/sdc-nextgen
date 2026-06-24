@@ -1,11 +1,11 @@
 
-# playbooks/nfs.yaml
-# Manage NFS fileservers
+# playbooks/xoa.yaml
+# Manage Xen Orchestra Appliance VMs
 
-- name: Configure nfs fileserver 
-  hosts: nfs
+- name: Configure xoa
+  hosts: xoa
   vars:
     ansible_user: vagrant
 
   roles:
-    - {role: roles/nfs, when: nfs_server}
+    - {role: roles/xoa, when: xoa_server}
