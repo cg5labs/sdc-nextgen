@@ -41,3 +41,6 @@ __pycache__
 # misc
 wrkfile.*
 *.swp
+
+.idea
+*.iml
