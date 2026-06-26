@@ -15,18 +15,18 @@
   with_items: "{{ xoa_server_pkgs }}"
   become: true
 
-- name: Create forced symlink /opt to /data
+- name: Create forced symlink /data to /opt
   file:
-    src: /opt
-    dest: /data
+    src: /data
+    dest: /opt
     state: link
     force: yes
   become: true
 
-- name: Create forced symlink /usr/local to /data
+- name: Create forced symlink /data to /usr/local
   file:
-    src: /usr/local
-    dest: /data
+    src: /data
+    dest: /usr/local
     state: link
     force: yes
   become: true
