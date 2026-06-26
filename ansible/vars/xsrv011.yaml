@@ -3,7 +3,7 @@ sr_name: "local-data"
 vm_template: "ubuntu-22.04.3-base"
 vm_name: "xsrv011"
 vm_class: "xoa"
-vm_data: 200
+vm_data: 5
 vm_erase_data: true
 k8s_master: false
 k8s_worker: false
@@ -11,7 +11,7 @@ nfs_server: false
 xoa_server: true
 bridge_name: "xenbr0"
 mac: "1e:8f:c0:11:12:7d"
-memory: 2147483648
+memory: 4294967296
 vm_created: false
 vcpu_count: 2
 iso_name: "guest-tools.iso"
