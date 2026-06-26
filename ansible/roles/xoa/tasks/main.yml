@@ -1,5 +1,13 @@
 # roles/xoa/tasks/main.yml
 ---
+- name: Update all packages to latest version
+  apt:
+    update_cache: yes
+    upgrade: dist
+    autoclean: yes
+    autoremove: yes
+  become: true
+
 - name: Ensure required OS base packages are installed
   package:
     name: "{{ item }}"

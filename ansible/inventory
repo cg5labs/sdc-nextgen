@@ -14,6 +14,9 @@ xsrv005 ansible_ssh_port=22 ansible_user=vagrant
 # empty because k8s-workers are dynamically added during playbook run
 [k8s-worker_vms]
 
+[xoa]
+xsrv011 ansible_ssh_port=22 ansible_user=vagrant
+
 [nfs]
 xsrv009 ansible_ssh_port=22 ansible_user=vagrant
 #storage-b ansible_ssh_port=22 ansible_user=vagrant
