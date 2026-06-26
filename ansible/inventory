@@ -2,8 +2,9 @@
 localhost ansible_connection=local
 
 [local]
-xen-0 ansible_ssh_port=22 ansible_user=root
+#xen-0 ansible_ssh_port=22 ansible_user=root
 #xen-1 ansible_ssh_port=22 ansible_user=root
+xen-2 ansible_ssh_port=22 ansible_user=root
 
 # Playbook will query k8s-master to get kubeadm token for workers to join
 [k8s-master_vms]

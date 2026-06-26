@@ -42,5 +42,6 @@ __pycache__
 wrkfile.*
 *.swp
 
+# ignore IntelliJ IDEA workfiles
 .idea
 *.iml
