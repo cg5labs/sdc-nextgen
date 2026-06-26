@@ -23,14 +23,6 @@
     force: yes
   become: true
 
-- name: Create forced symlink /data to /usr/local
-  file:
-    src: /data
-    dest: /usr/local
-    state: link
-    force: yes
-  become: true
-
 - name: Copy xo_install.sh script to /tmp and set permissions
   copy:
     src: xo_install.sh
