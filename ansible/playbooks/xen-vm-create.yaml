@@ -257,3 +257,7 @@
   import_playbook: nfs.yaml
   when: (vm_class == "nfs" )
 
+- name: Play for xoa-server only
+  import_playbook: xoa.yaml
+  when: (vm_class == "xoa" )
+

@@ -2,7 +2,7 @@
 sr_name: "local-data"
 vm_template: "ubuntu-22.04.3-base"
 vm_name: "xsrv011"
-vm_class: "nfs"
+vm_class: "xoa"
 vm_data: 200
 vm_erase_data: true
 k8s_master: false
