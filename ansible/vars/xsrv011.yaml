@@ -10,7 +10,7 @@ k8s_worker: false
 nfs_server: false
 xoa_server: true
 bridge_name: "xenbr0"
-mac: "1e:8f:c0:11:12:7f"
+mac: "1e:8f:c0:11:12:7d"
 memory: 2147483648
 vm_created: false
 vcpu_count: 2
