@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://raw.githubusercontent.com/Jarli01/xenorchestra_installer/refs/heads/master/xo_install.sh
+
 # Check if we were effectively run as root
 [ $EUID = 0 ] || { echo "This script needs to be run as root!"; exit 1; }
 
