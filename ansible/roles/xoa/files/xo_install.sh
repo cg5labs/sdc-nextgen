@@ -10,7 +10,7 @@ totalk=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
 if [ "$totalk" -lt "2000000" ]; then echo "XOCE Requires at least 2GB Memory!"; exit 1; fi
 
 distro=$(/usr/bin/lsb_release -is)
-if [ "$distro" = "Ubuntu" ]; then /usr/bin/add-apt-repository multiverse; fi
+if [ "$distro" = "Ubuntu" ]; then /usr/bin/add-apt-repository -y multiverse; fi
 
 xo_branch="master"
 xo_server="https://github.com/vatesfr/xen-orchestra"
@@ -67,41 +67,41 @@ ignoreplugins=("xo-server-test")
 for source in $(ls -d /opt/xen-orchestra/packages/xo-server-*); do
   plugin=$(basename $source)
     if [[ "${ignoreplugins[@]}" =~ $plugin ]]; then
-          echo "Ignoring $plugin plugin"
-            else
-                  ln -s "$source" "$dest"
-                      fi
-                      done
+      echo "Ignoring $plugin plugin"
+    else
+      ln -s "$source" "$dest"
+    fi
+done
 
-                      if [[ -e $systemd_service_dir/$xo_service ]] ; then
-                        rm $systemd_service_dir/$xo_service
-                        fi
+if [[ -e $systemd_service_dir/$xo_service ]] ; then
+  rm $systemd_service_dir/$xo_service
+fi
 
-                        /bin/cat << EOF >> $systemd_service_dir/$xo_service
-                        # Systemd service for XO-Server.
+/bin/cat << EOF >> $systemd_service_dir/$xo_service
+# Systemd service for XO-Server.
 
-                        [Unit]
-                        Description= XO Server
-                        After=network-online.target
+[Unit]
+Description= XO Server
+After=network-online.target
 
-                        [Service]
-                        WorkingDirectory=/opt/xen-orchestra/packages/xo-server/
-                        ExecStart=/usr/local/bin/node ./dist/cli.mjs
+[Service]
+WorkingDirectory=/opt/xen-orchestra/packages/xo-server/
+ExecStart=/usr/local/bin/node ./dist/cli.mjs
 
-                        Restart=always
-                        SyslogIdentifier=xo-server
+Restart=always
+SyslogIdentifier=xo-server
 
-                        [Install]
-                        WantedBy=multi-user.target
-                        EOF
+[Install]
+WantedBy=multi-user.target
+EOF
 
 
-                        /bin/systemctl daemon-reload
-                        /bin/systemctl enable $xo_service
-                        /bin/systemctl start $xo_service
+/bin/systemctl daemon-reload
+/bin/systemctl enable $xo_service
+/bin/systemctl start $xo_service
 
-                        echo ""
-                        echo ""
-                        echo "Installation complete, open a browser to:" && hostname -I && echo "" && echo "Default Login:"admin@admin.net" Password:"admin"" && echo "" && echo "Don't forget to change your password!"
+echo ""
+echo ""
+echo "Installation complete, open a browser to:" && hostname -I && echo "" && echo "Default Login:"admin@admin.net" Password:"admin"" && echo "" && echo "Don't forget to change your password!"
 
 
