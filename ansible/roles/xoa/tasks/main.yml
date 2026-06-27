@@ -44,6 +44,7 @@
   reboot:
     reboot_timeout: 300
     test_command: uptime
+  become: true
 
 - name: Import user creation tasks
   import_tasks: users.yml

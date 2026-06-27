@@ -2,7 +2,7 @@
 ---
 - name: Create operator user with xo-cli
   shell: |
-    xo-cli --register-self --host=localhost --username=admin@admin.net --password=admin --au
-    xo-cli user.create username=operator password=test
+    xo-cli register --allowUnauthorized http://127.0.0.1 admin@admin.net admin
+    xo-cli user.create email=cgscheible@yahoo.com password=test
   become: true
 
