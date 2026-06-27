@@ -3,6 +3,6 @@
 - name: Create operator user with xo-cli
   shell: |
     xo-cli register --allowUnauthorized http://127.0.0.1 admin@admin.net admin
-    xo-cli user.create email=cgscheible@yahoo.com password=test
+    xo-cli user.create email=cgscheible@yahoo.com password=test permission=admin
   become: true
 
