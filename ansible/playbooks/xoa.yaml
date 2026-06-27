@@ -9,3 +9,6 @@
 
   roles:
     - {role: roles/xoa, when: xoa_server}
+
+  post_tasks:
+

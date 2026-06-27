@@ -30,7 +30,20 @@
     mode: '0755'
   become: true
 
-- name: Run xo_install.sh script as root
+- name: "Run xo_install.sh script as root"
   command: /tmp/xo_install.sh
   become: true
 
+- name: "Install xo-cli if install_xo_cli is true"
+  command: npm install -g @xen-orchestra/cli
+  become: true
+  when: install_xo_cli
+
+- name: "Reboot xoa server"
+  reboot:
+    reboot_timeout: 300
+    test_command: uptime
+
+- name: Import user creation tasks
+  import_tasks: users.yml
+  when: install_xo_cli

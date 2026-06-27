@@ -9,5 +9,5 @@ xoa_server_pkgs:
   - lvm2
   - cifs-utils
 
-exportfs_path: /data
+install_xo_cli: true
 

@@ -1,0 +1,8 @@
+# roles/xoa/tasks/users.yml
+---
+- name: Create operator user with xo-cli
+  shell: |
+    xo-cli --register-self --host=localhost --username=admin --password=admin
+    xo-cli user.create username=operator password=test
+  become: true
+
