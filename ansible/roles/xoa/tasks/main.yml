@@ -35,7 +35,8 @@
   become: true
 
 - name: "Install xo-cli if install_xo_cli is true"
-  command: npm install -g @xen-orchestra/cli
+  #command: npm install -g @xen-orchestra/cli
+  command: npm install -g xo-cli
   become: true
   when: install_xo_cli
 
