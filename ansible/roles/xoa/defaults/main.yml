@@ -10,4 +10,8 @@ xoa_server_pkgs:
   - cifs-utils
 
 install_xo_cli: true
-
+xo-cli_email:
+xo-cli_password:
+xo-cli_permission: admin
+xo-cli_allow_unauthorized: true
+xo-cli_url: http://127.0.0.1

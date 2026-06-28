@@ -9,6 +9,4 @@
 
   roles:
     - {role: roles/xoa, when: xoa_server}
-
-  post_tasks:
-
+    - {role: roles/nginx, when: xoa_server}

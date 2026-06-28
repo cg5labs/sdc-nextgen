@@ -1,8 +1,21 @@
 # roles/xoa/tasks/users.yml
 ---
-- name: Create operator user with xo-cli
-  shell: |
-    xo-cli register --allowUnauthorized http://127.0.0.1 admin@admin.net admin
-    xo-cli user.create email=cgscheible@yahoo.com password=test permission=admin
+- name: Register xo-cli with XO server (if credentials provided)
+  shell: >-
+    xo-cli register {% if xo-cli_allow_unauthorized %}--allowUnauthorized {% endif %}{{ xo-cli_url }} {{ xo-cli_email }} {{ xo-cli_password }}
+  args:
+    warn: false
   become: true
+  when:
+  - xo-cli_email
+  - xo-cli_password
 
+- name: Create operator user with xo-cli (if credentials provided)
+  shell: >-
+    xo-cli user.create email={{ xo-cli_email }} password={{ xo-cli_password }} permission={{ xo-cli_permission }}
+  args:
+    warn: false
+  become: true
+  when:
+  - xo-cli_email
+  - xo-cli_password
