@@ -8,8 +8,8 @@ nginx_service_enabled: true
 
 # TLS Configuration
 # Source paths (on Ansible workstation)
-nginx_tls_certificate_src: "files/ansible/nginx.crt"
-nginx_tls_key_src: "files/ansible/nginx.key"
+nginx_tls_certificate_src: "roles/nginx/files/ansible/nginx.crt"
+nginx_tls_key_src: "roles/nginx/files/ansible/nginx.key"
 
 # Destination paths (on target system)
 nginx_tls_certificate_path: /etc/ssl/certs/nginx.crt
