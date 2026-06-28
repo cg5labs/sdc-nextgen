@@ -8,15 +8,15 @@ nginx_service_enabled: true
 
 # TLS Configuration
 # Source paths (on Ansible workstation)
-nginx_tls_certificate_src: "roles/nginx/files/ansible/nginx.crt"
-nginx_tls_key_src: "roles/nginx/files/ansible/nginx.key"
+nginx_tls_certificate_src: "nginx.crt"
+nginx_tls_key_src: "nginx.key"
 
 # Destination paths (on target system)
 nginx_tls_certificate_path: /etc/ssl/certs/nginx.crt
 nginx_tls_key_path: /etc/ssl/private/nginx.key
 
 # Server Configuration
-nginx_server_name: _
+nginx_server_name: xsrv011.cg5labs.net
 nginx_listen_port: 443
 nginx_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_ssl_ciphers: "HIGH:!aNULL:!MD5"
@@ -26,8 +26,5 @@ nginx_ssl_prefer_server_ciphers: "on"
 nginx_root: /var/www/html
 
 # Proxy Configuration (optional)
-nginx_enable_proxy: false
+nginx_enable_proxy: true
 nginx_proxy_backend_url: http://127.0.0.1:80
-nginx_proxy_connect_timeout: 60s
-nginx_proxy_send_timeout: 60s
-nginx_proxy_read_timeout: 60s

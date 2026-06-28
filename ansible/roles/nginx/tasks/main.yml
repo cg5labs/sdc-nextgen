@@ -34,18 +34,6 @@
   become: true
   notify: Reload nginx
 
-- name: Deploy nginx configuration from template
-  template:
-    src: default.conf.j2
-    dest: /etc/nginx/sites-available/default.conf
-    owner: root
-    group: root
-    mode: '0644'
-    backup: yes
-  become: true
-  notify: Reload nginx
-  when: not nginx_enable_proxy
-
 - name: Deploy nginx proxy configuration from template
   template:
     src: proxy.conf.j2

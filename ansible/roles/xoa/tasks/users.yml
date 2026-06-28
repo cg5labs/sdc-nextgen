@@ -1,5 +1,13 @@
 # roles/xoa/tasks/users.yml
 ---
+
+- name: Wait until TCP port 80 is listening
+  wait_for:
+    port: 80
+    state: started
+    timeout: 300
+    delay: 0
+
 - name: Register xo-cli with XO server (if credentials provided)
   shell: >-
     xo-cli register --allowUnauthorized {{ xo_cli_url }} {{ xo_cli_default_email }} {{ xo_cli_default_password }}
