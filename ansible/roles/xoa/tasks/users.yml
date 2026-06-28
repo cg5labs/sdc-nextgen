@@ -2,20 +2,20 @@
 ---
 - name: Register xo-cli with XO server (if credentials provided)
   shell: >-
-    xo-cli register {% if xo-cli_allow_unauthorized %}--allowUnauthorized {% endif %}{{ xo-cli_url }} {{ xo-cli_email }} {{ xo-cli_password }}
+    xo-cli register {% if xo_cli_allow_unauthorized %}--allowUnauthorized {% endif %}{{ xo_cli_url }} {{ xo_cli_email }} {{ xo_cli_password }}
   args:
     warn: false
   become: true
   when:
-  - xo-cli_email
-  - xo-cli_password
+  - xo_cli_email
+  - xo_cli_password
 
 - name: Create operator user with xo-cli (if credentials provided)
   shell: >-
-    xo-cli user.create email={{ xo-cli_email }} password={{ xo-cli_password }} permission={{ xo-cli_permission }}
+    xo-cli user.create email={{ xo_cli_email }} password={{ xo_cli_password }} permission={{ xo_cli_permission }}
   args:
     warn: false
   become: true
   when:
-  - xo-cli_email
-  - xo-cli_password
+  - xo_cli_email
+  - xo_cli_password
