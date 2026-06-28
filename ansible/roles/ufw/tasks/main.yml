@@ -1,0 +1,79 @@
+# roles/ufw/tasks/main.yml
+---
+- name: Update all packages to latest version
+  apt:
+    update_cache: yes
+    upgrade: dist
+    autoclean: yes
+    autoremove: yes
+  become: true
+
+- name: Install ufw package
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ ufw_packages }}"
+  become: true
+
+- name: Configure ufw default incoming policy
+  ufw:
+    direction: incoming
+    policy: "{{ ufw_default_incoming }}"
+  become: true
+  notify: Reload ufw
+
+- name: Configure ufw default outgoing policy
+  ufw:
+    direction: outgoing
+    policy: "{{ ufw_default_outgoing }}"
+  become: true
+  notify: Reload ufw
+
+- name: Configure ufw default routed policy
+  ufw:
+    direction: routed
+    policy: "{{ ufw_default_routed }}"
+  become: true
+  notify: Reload ufw
+
+- name: Allow SSH traffic
+  ufw:
+    rule: allow
+    port: "{{ ufw_ssh_port }}"
+    proto: "{{ ufw_ssh_protocol }}"
+  become: true
+  when: ufw_allow_ssh
+  notify: Reload ufw
+
+- name: Allow HTTPS traffic
+  ufw:
+    rule: allow
+    port: "{{ ufw_https_port }}"
+    proto: "{{ ufw_https_protocol }}"
+  become: true
+  when: ufw_allow_https
+  notify: Reload ufw
+
+- name: Enable ufw
+  ufw:
+    state: enabled
+  become: true
+  notify: Reload ufw
+
+- name: Start ufw service
+  service:
+    name: ufw
+    state: "{{ ufw_service_state }}"
+    enabled: "{{ ufw_service_enabled }}"
+  become: true
+
+- name: Show ufw status
+  command: ufw status
+  become: true
+  register: ufw_status
+  changed_when: false
+
+- name: Display ufw status
+  debug:
+    msg: "{{ ufw_status.stdout_lines }}"
+

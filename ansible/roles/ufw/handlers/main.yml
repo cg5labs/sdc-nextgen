@@ -1,0 +1,13 @@
+# roles/ufw/handlers/main.yml
+---
+- name: Reload ufw
+  ufw:
+    state: reloaded
+  become: true
+
+- name: Restart ufw
+  service:
+    name: ufw
+    state: restarted
+  become: true
+

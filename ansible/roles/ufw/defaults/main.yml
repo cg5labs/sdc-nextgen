@@ -1,0 +1,26 @@
+# roles/ufw/defaults/main.yml
+---
+ufw_packages:
+  - ufw
+
+ufw_state: enabled
+ufw_default_incoming: deny
+ufw_default_outgoing: allow
+ufw_default_routed: deny
+
+# Allow rules - services
+ufw_allow_ssh: true
+ufw_allow_https: true
+
+# SSH configuration
+ufw_ssh_port: 22
+ufw_ssh_protocol: tcp
+
+# HTTPS configuration
+ufw_https_port: 443
+ufw_https_protocol: tcp
+
+# Service state
+ufw_service_state: started
+ufw_service_enabled: true
+
