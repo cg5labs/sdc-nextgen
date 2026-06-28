@@ -1,0 +1,25 @@
+# roles/xoa/tasks/admin-cleanup.yml
+---
+- name: Retrieve default admin user ID
+  shell: |
+    xo-cli user.getAll | grep -i "admin@admin.net" | head -1 | awk '{print $1}'
+  register: default_admin_user_id
+  changed_when: false
+  become: true
+
+- name: Debug - Display default admin user ID
+  debug:
+    msg: "Default admin user ID: {{ default_admin_user_id.stdout }}"
+
+- name: Delete default admin user
+  shell: |
+    xo-cli user.delete id={{ default_admin_user_id.stdout }}
+  become: true
+  when: default_admin_user_id.stdout | length > 0
+  register: delete_admin_result
+
+- name: Debug - Display deletion result
+  debug:
+    msg: "{{ delete_admin_result }}"
+  when: default_admin_user_id.stdout | length > 0
+
