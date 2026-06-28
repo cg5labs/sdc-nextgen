@@ -10,3 +10,4 @@
   roles:
     - {role: roles/xoa, when: xoa_server}
     - {role: roles/nginx, when: xoa_server}
+    - {role: roles/ufw, when: xoa_server}
