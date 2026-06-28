@@ -2,13 +2,14 @@
 ---
 - name: Register xo-cli with XO server (if credentials provided)
   shell: >-
-    xo-cli register {% if xo_cli_allow_unauthorized %}--allowUnauthorized {% endif %}{{ xo_cli_url }} {{ xo_cli_email }} {{ xo_cli_password }}
+    xo-cli register --allowUnauthorized {{ xo_cli_url }} {{ xo_cli_email }} {{ xo_cli_password }}
   args:
     warn: false
   become: true
   when:
   - xo_cli_email
   - xo_cli_password
+  - xo_cli_allow_unauthorized
 
 - name: Create operator user with xo-cli (if credentials provided)
   shell: >-

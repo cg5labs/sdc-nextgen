@@ -10,8 +10,13 @@ xoa_server_pkgs:
   - cifs-utils
 
 install_xo_cli: true
+
+# inject credentials on playbook runtime to create an operator user with xo-cli
 xo_cli_email:
 xo_cli_password:
+
+# default for running the xo-cli user registration locally on the XO server,
+# with admin permissions and allowing self-signed certificates
 xo_cli_permission: admin
 xo_cli_allow_unauthorized: true
 xo_cli_url: http://127.0.0.1
