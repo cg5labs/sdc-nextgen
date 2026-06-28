@@ -1,0 +1,112 @@
+# roles/nginx/tasks/main.yml
+---
+- name: Update all packages to latest version
+  apt:
+    update_cache: yes
+    upgrade: dist
+    autoclean: yes
+    autoremove: yes
+  become: true
+
+- name: Install nginx package
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ nginx_packages }}"
+  become: true
+
+- name: Ensure nginx directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - /etc/nginx/sites-available
+    - /etc/nginx/sites-enabled
+  become: true
+
+- name: Disable default nginx configuration
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  become: true
+  notify: Reload nginx
+
+- name: Deploy nginx configuration from template
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/default.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  become: true
+  notify: Reload nginx
+  when: not nginx_enable_proxy
+
+- name: Deploy nginx proxy configuration from template
+  template:
+    src: proxy.conf.j2
+    dest: /etc/nginx/sites-available/default.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  become: true
+  notify: Reload nginx
+  when: nginx_enable_proxy
+
+- name: Enable nginx configuration
+  file:
+    src: /etc/nginx/sites-available/default.conf
+    dest: /etc/nginx/sites-enabled/default.conf
+    state: link
+  become: true
+  notify: Reload nginx
+
+- name: Ensure SSL directory exists
+  file:
+    path: /etc/ssl/private
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+  become: true
+
+- name: Copy TLS certificate from Ansible workstation
+  copy:
+    src: "{{ nginx_tls_certificate_src }}"
+    dest: "{{ nginx_tls_certificate_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  become: true
+  notify: Reload nginx
+
+- name: Copy TLS key from Ansible workstation
+  copy:
+    src: "{{ nginx_tls_key_src }}"
+    dest: "{{ nginx_tls_key_path }}"
+    owner: root
+    group: root
+    mode: '0600'
+    backup: yes
+  become: true
+  notify: Reload nginx
+
+- name: Test nginx configuration
+  command: nginx -t
+  become: true
+  register: nginx_test
+  changed_when: false
+
+- name: Enable nginx service at startup
+  service:
+    name: nginx
+    enabled: "{{ nginx_service_enabled }}"
+    state: "{{ nginx_service_state }}"
+  become: true
+

@@ -1,0 +1,14 @@
+# roles/nginx/handlers/main.yml
+---
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: true
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  become: true
+
