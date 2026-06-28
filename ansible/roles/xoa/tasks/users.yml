@@ -24,3 +24,16 @@
   when:
   - xo_cli_email
   - xo_cli_password
+
+- name: Re-register xo-cli
+  shell: >-
+    xo-cli register --allowUnauthorized {{ xo_cli_url }} {{ xo_cli_email }} {{ xo_cli_password }}
+  become: true
+  when:
+    - xo_cli_email
+    - xo_cli_password
+    - xo_cli_allow_unauthorized
+
+- name: Import admin cleanup tasks
+  import_tasks: admin-cleanup.yml
+  when: xo_cli_cleanup_default_admin | default(false)
