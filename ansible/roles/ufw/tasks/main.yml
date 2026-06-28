@@ -15,6 +15,17 @@
   with_items: "{{ ufw_packages }}"
   become: true
 
+- name: Copy /etc/defaults/ufw with IPV6 disabled
+  copy:
+    src: "ufw"
+    dest: "/etc/defaults/ufw"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  become: true
+
+
 - name: Configure ufw default incoming policy
   ufw:
     direction: incoming
