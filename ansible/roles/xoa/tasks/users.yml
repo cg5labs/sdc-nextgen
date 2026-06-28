@@ -2,7 +2,7 @@
 ---
 - name: Register xo-cli with XO server (if credentials provided)
   shell: >-
-    xo-cli register --allowUnauthorized {{ xo_cli_url }} {{ xo_cli_email }} {{ xo_cli_password }}
+    xo-cli register --allowUnauthorized {{ xo_cli_url }} {{ xo_cli_default_email }} {{ xo_cli_default_password }}
   become: true
   when:
   - xo_cli_email

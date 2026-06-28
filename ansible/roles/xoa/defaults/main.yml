@@ -17,6 +17,8 @@ xo_cli_password:
 
 # default for running the xo-cli user registration locally on the XO server,
 # with admin permissions and allowing self-signed certificates
+xo_cli_default_email: admin@admin.net
+xo_cli_default_password: admin
 xo_cli_permission: admin
 xo_cli_allow_unauthorized: true
 xo_cli_url: http://127.0.0.1
