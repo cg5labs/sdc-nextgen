@@ -2,7 +2,7 @@
 ---
 - name: Retrieve default admin user ID
   shell: |
-    xo-cli user.getAll | grep -i "admin@admin.net" | head -1 | awk '{print $1}'
+    xo-cli user.getAll --json | jq -r '.[] | select(.email=="admin@admin.net") | .id'
   register: default_admin_user_id
   changed_when: false
   become: true
