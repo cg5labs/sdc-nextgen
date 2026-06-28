@@ -18,7 +18,7 @@
 - name: Copy /etc/defaults/ufw with IPV6 disabled
   copy:
     src: "ufw"
-    dest: "/etc/defaults/ufw"
+    dest: "/etc/default/ufw"
     owner: root
     group: root
     mode: '0644'
