@@ -45,3 +45,9 @@ wrkfile.*
 # ignore IntelliJ IDEA workfiles
 .idea
 *.iml
+
+# ignore TLS files
+*.crt
+*.csr
+*.key
+
