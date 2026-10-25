@@ -1,6 +1,6 @@
 # K8s worker (large, 4 vCPU, 4GB RAM, 40GB disk)
 ---
-sr_name: "EVO-870"
+sr_name: "local-data"
 vm_template: "ubuntu-22.04.3-base"
 #vm_name: ""
 vm_data: 40
